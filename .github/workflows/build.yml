@@ -33,6 +33,7 @@ jobs:
         run: |
           chmod +x ipabuild.sh
           ./ipabuild.sh
+          ls build
 
       - name: upload artifact (PR only)
         if: github.event_name == 'pull_request'

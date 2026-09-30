@@ -35,21 +35,11 @@ jobs:
           ./ipabuild.sh
           ls build
 
-      - name: upload artifact (PR only)
-        if: github.event_name == 'pull_request'
+      - name: upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: filos-ipa
-          path: |
-            build/Filos.ipa
-            build/xcodebuild.log
-
-      - name: upload release ipa
-        if: github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-ipa
-          path: build/Filos.ipa
+          path: Filos.ipa
 
 
   release:
@@ -66,8 +56,7 @@ jobs:
       - name: download ipa
         uses: actions/download-artifact@v4
         with:
-          name: release-ipa
-          path: build/
+          name: filos-ipa
 
       - name: get last 12h commits
         run: |
@@ -105,4 +94,4 @@ jobs:
             --notes-file release_notes.txt \
             --prerelease
       
-          gh release upload nightly build/Filos.ipa --clobber
+          gh release upload nightly Filos.ipa --clobber

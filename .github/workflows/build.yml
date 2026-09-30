@@ -33,7 +33,6 @@ jobs:
         run: |
           chmod +x ipabuild.sh
           ./ipabuild.sh
-          ls build
 
       - name: upload artifact
         uses: actions/upload-artifact@v4
@@ -91,7 +90,6 @@ jobs:
       
           gh release edit nightly \
             --title "Nightly" \
-            --notes-file release_notes.txt \
             --prerelease
       
           gh release upload nightly Filos.ipa --clobber

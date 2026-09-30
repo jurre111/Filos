@@ -313,7 +313,7 @@ struct FileBrowserView: View {
             if newSearch.isEmpty {
                 dirFiles = unfilteredFiles
             } else {
-                dirFiles = unfilteredFiles.filter { $0.name.localizedCaseInsensitiveContains(newSearch) }
+                dirFiles = unfilteredFiles.filter { $0.displayName.localizedCaseInsensitiveContains(newSearch) }
             }
         }
         .onChange(of: chosenSort) { _ in
@@ -364,7 +364,7 @@ struct FileBrowserView: View {
         case .system:
             sortedFiles = files
         case .name:
-            sortedFiles = files.sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+            sortedFiles = files.sorted { $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending }
         case .date:
             sortedFiles = files.sorted { $0.modifiedDate > $1.modifiedDate }
         case .type:

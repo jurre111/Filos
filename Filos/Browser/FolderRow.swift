@@ -24,15 +24,15 @@ struct FolderRow: View {
         } label: {
             HStack(spacing: fileRowSpacing) {
                 Group {
-                    if fm.fileExists(atPath: item.fileURL.appendingPathComponent(".com.apple.mobile_container_manager.metadata.plist").path) || fm.fileExists(atPath: item.fileURL.appendingPathComponent("Info.plist").path) {
+                    if item.name != item.displayName {
                         Image(systemName: "app")
                             .frame(width: 20, alignment: .center)
                         VStack(alignment: .leading) {
-                            Text(getNameFromInfP(item.fileURL) ?? getBIDFromMCM(item.fileURL) ?? item.name)
+                            Text(item.displayName)
                                 .foregroundStyle(item.hidden ? .secondary : .primary)
                                 .lineLimit(1)
                                 .truncationMode(.middle)
-                            Text(item.fileURL.lastPathComponent)
+                            Text(item.name)
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)

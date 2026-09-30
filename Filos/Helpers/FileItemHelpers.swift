@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 struct FileItem: Identifiable, Equatable {
     let id = UUID()
     var name: String
+    var displayName: String
     var fileURL: URL
     var destURL: URL
     var type: FileType
@@ -30,11 +31,17 @@ struct FileItem: Identifiable, Equatable {
     var executable: Bool
 }
 
-let clearFileItem = FileItem(name: "", fileURL: URL(fileURLWithPath: ""), destURL: URL(fileURLWithPath: ""), type: .file, uttype: .data, size: 0, creationDate: Date(), modifiedDate: Date(), creationDateStr: "", modifiedDateStr: "", hidden: false, posixPerms: "", owner: "", group: "", readable: false, writable: false, executable: false)
+let clearFileItem = FileItem(name: "", displayName: "", fileURL: URL(fileURLWithPath: ""), destURL: URL(fileURLWithPath: ""), type: .file, uttype: .data, size: 0, creationDate: Date(), modifiedDate: Date(), creationDateStr: "", modifiedDateStr: "", hidden: false, posixPerms: "", owner: "", group: "", readable: false, writable: false, executable: false)
 
 func getFileItem(at url: URL) -> FileItem {
-    var item = FileItem(name: url.lastPathComponent, fileURL: url, destURL: url, type: .file, uttype: .data, size: 0, creationDate: Date(), modifiedDate: Date(), creationDateStr: "", modifiedDateStr: "", hidden: false, posixPerms: "", owner: "", group: "", readable: false, writable: false, executable: false)
+    var item = FileItem(name: url.lastPathComponent, displayName: url.lastPathComponent, fileURL: url, destURL: url, type: .file, uttype: .data, size: 0, creationDate: Date(), modifiedDate: Date(), creationDateStr: "", modifiedDateStr: "", hidden: false, posixPerms: "", owner: "", group: "", readable: false, writable: false, executable: false)
     
+    if let appName = getNameFromInfP(url) {
+        item.displayName = appName
+    } else if let bundleID = getBIDFromMCM(url) {
+        item.displayName = bundleID
+    }
+
     let formatter = DateFormatter()
     formatter.dateFormat = "MM-dd-yyyy h:mm a"
     formatter.locale = Locale(identifier: "en_US_POSIX")

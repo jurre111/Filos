@@ -3,8 +3,7 @@ import UIKit
 
 
 class FilosTheme: Theme {
-    let fontSize: CGFloat = UserDefaults.standard.object(forKey: "textViewerSize") as? CGFloat ?? 11
-    let font: UIFont = .monospacedSystemFont(ofSize: fontSize, weight: .regular)
+    let font: UIFont
     let textColor: UIColor = .filos.foreground
 
 
@@ -13,7 +12,7 @@ class FilosTheme: Theme {
 
 
     let lineNumberColor: UIColor = .filos.foreground
-    let lineNumberFont: UIFont = .monospacedSystemFont(ofSize: fontSize, weight: .regular)
+    let lineNumberFont: UIFont
 
 
     let selectedLineBackgroundColor: UIColor = .filos.currentLine
@@ -29,6 +28,12 @@ class FilosTheme: Theme {
 
 
     let markedTextBackgroundColor: UIColor = .filos.foreground.withAlphaComponent(0.2)
+
+    init() {
+        let fontSize: CGFloat = UserDefaults.standard.object(forKey: "textViewerSize") as? CGFloat ?? 11
+        font = .monospacedSystemFont(ofSize: fontSize, weight: .regular)
+        lineNumberFont = .monospacedSystemFont(ofSize: fontSize, weight: .regular)
+    }
 
     func textColor(for highlightName: String) -> UIColor? {
         guard let highlightName = HighlightName(highlightName) else {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CC48540A300BC5A0007D98D0 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = CC485409300BC5A0007D98D0 /* ZIPFoundation */; };
 		D7A1B2C3D4E5F60123456789 /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = D7A1B2C3D4E5F6012345678A /* Runestone */; };
+		E8B2C3D4E5F60123456789A /* TreeSitterJSONRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = E8B2C3D4E5F60123456789B /* TreeSitterJSONRunestone */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 			files = (
 				CC48540A300BC5A0007D98D0 /* ZIPFoundation in Frameworks */,
 				D7A1B2C3D4E5F60123456789 /* Runestone in Frameworks */,
+				E8B2C3D4E5F60123456789A /* TreeSitterJSONRunestone in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +89,7 @@
 			packageProductDependencies = (
 				CC485409300BC5A0007D98D0 /* ZIPFoundation */,
 				D7A1B2C3D4E5F6012345678A /* Runestone */,
+				E8B2C3D4E5F60123456789B /* TreeSitterJSONRunestone */,
 			);
 			productName = Filos;
 			productReference = 1531758F30094354008A92CE /* Filos.app */;
@@ -119,6 +122,7 @@
 			packageReferences = (
 				CC485408300BC5A0007D98D0 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 				D7A1B2C3D4E5F60123456787 /* XCRemoteSwiftPackageReference "Runestone" */,
+				E8B2C3D4E5F60123456789C /* XCRemoteSwiftPackageReference "TreeSitterLanguages" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1531759030094354008A92CE /* Products */;
@@ -385,6 +389,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E8B2C3D4E5F60123456789C /* XCRemoteSwiftPackageReference "TreeSitterLanguages" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simonbs/TreeSitterLanguages.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.10;
+			};
+		};
 		D7A1B2C3D4E5F60123456787 /* XCRemoteSwiftPackageReference "Runestone" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/simonbs/Runestone.git";
@@ -404,6 +416,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E8B2C3D4E5F60123456789B /* TreeSitterJSONRunestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E8B2C3D4E5F60123456789C /* XCRemoteSwiftPackageReference "TreeSitterLanguages" */;
+			productName = TreeSitterJSONRunestone;
+		};
 		D7A1B2C3D4E5F6012345678A /* Runestone */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D7A1B2C3D4E5F60123456787 /* XCRemoteSwiftPackageReference "Runestone" */;

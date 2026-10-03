@@ -20,6 +20,15 @@
       }
     },
     {
+      "identity" : "tree-sitter-languages",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/simonbs/treesitterlanguages",
+      "state" : {
+        "revision" : "15cf3a9ec3ab95e0d058b7df9f35619123c9e02d",
+        "version" : "0.1.10"
+      }
+    },
+    {
       "identity" : "zipfoundation",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/weichsel/ZIPFoundation.git",

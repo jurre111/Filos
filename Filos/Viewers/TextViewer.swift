@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Runestone
+import TreeSitterJSONRunestone
 
 
 struct TextViewer: View {
@@ -153,9 +154,10 @@ struct RunestoneEditor: UIViewRepresentable {
         let textView = TextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .systemBackground
+        textview.showLineNumbers = true
         textView.editorDelegate = context.coordinator
         
-        let state = TextViewState(text: text, theme: DefaultTheme())
+        let state = TextViewState(text: text, theme: DefaultTheme(), language: .json)
         textView.setState(state)
         
         return textView
@@ -163,7 +165,7 @@ struct RunestoneEditor: UIViewRepresentable {
 
     func updateUIView(_ uiView: TextView, context: Context) {
         if uiView.text != text {
-            let state = TextViewState(text: text, theme: DefaultTheme())
+            let state = TextViewState(text: text, theme: DefaultTheme(), language: .json)
             uiView.setState(state)
         }
     }

@@ -160,7 +160,7 @@ struct TextViewer: View {
         return false
     }
 
-    private func getLanguage(_ url: URL) -> TreeSitterLanguageProvider? {
+    private func getLanguage(_ url: URL) -> TreeSitterLanguage? {
         let ext = url.pathExtension.lowercased()
         switch ext {
         case "json":
@@ -189,6 +189,8 @@ struct TextViewer: View {
             return .swift
         case "yaml", "yml":
             return .yaml
+        default:
+            return nil
         }
     }
 }
@@ -219,7 +221,10 @@ struct RunestoneEditor: UIViewRepresentable {
     }
 
     func getState() -> TextViewState {
-        return language != nil ? TextViewState(text: text, theme: DefaultTheme(), language: language) : TextViewState(text: text, theme: DefaultTheme())
+        if let language {
+            return TextViewState(text: text, theme: DefaultTheme(), language: language)
+        }
+        return TextViewState(text: text, theme: DefaultTheme())
     }
 
     func makeCoordinator() -> Coordinator {

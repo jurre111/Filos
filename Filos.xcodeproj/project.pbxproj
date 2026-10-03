@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CC48540A300BC5A0007D98D0 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = CC485409300BC5A0007D98D0 /* ZIPFoundation */; };
+		D7A1B2C3D4E5F60123456789 /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = D7A1B2C3D4E5F6012345678A /* Runestone */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC48540A300BC5A0007D98D0 /* ZIPFoundation in Frameworks */,
+				D7A1B2C3D4E5F60123456789 /* Runestone in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +86,7 @@
 			name = Filos;
 			packageProductDependencies = (
 				CC485409300BC5A0007D98D0 /* ZIPFoundation */,
+				D7A1B2C3D4E5F6012345678A /* Runestone */,
 			);
 			productName = Filos;
 			productReference = 1531758F30094354008A92CE /* Filos.app */;
@@ -115,6 +118,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				CC485408300BC5A0007D98D0 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
+				D7A1B2C3D4E5F60123456787 /* XCRemoteSwiftPackageReference "Runestone" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1531759030094354008A92CE /* Products */;
@@ -381,6 +385,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		D7A1B2C3D4E5F60123456787 /* XCRemoteSwiftPackageReference "Runestone" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simonbs/Runestone.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.2;
+			};
+		};
 		CC485408300BC5A0007D98D0 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
@@ -392,6 +404,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		D7A1B2C3D4E5F6012345678A /* Runestone */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D7A1B2C3D4E5F60123456787 /* XCRemoteSwiftPackageReference "Runestone" */;
+			productName = Runestone;
+		};
 		CC485409300BC5A0007D98D0 /* ZIPFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CC485408300BC5A0007D98D0 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;

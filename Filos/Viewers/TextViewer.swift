@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Runestone
 
 
 struct TextViewer: View {
@@ -20,7 +21,7 @@ struct TextViewer: View {
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
-    @State private var isEditing = false
+    @State private var isEditing = true
     
     init(_ fileURL: URL) {
         self.fileURL = fileURL
@@ -28,21 +29,20 @@ struct TextViewer: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    if isEditing {
-                        TextEditor(text: $editText)
-                            .font(.system(size: CGFloat(textViewerSize), design: useMonospaced ? .monospaced : .default))
-                    } else {
+            VStack(alignment: .leading) {
+                if isEditing {
+                    RunestoneEditor(text: $editText)
+                } else {
+                    ScrollView {
                         Text(fileText)
                             .font(.system(size: CGFloat(textViewerSize), design: useMonospaced ? .monospaced : .default))
                             .padding(5)
                             .textSelection(.enabled)
                     }
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(minHeight: 100, alignment: .topLeading)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(minHeight: 100, alignment: .topLeading)
             .navigationTitle(fileURL.deletingPathExtension().lastPathComponent)
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.insetGrouped)
@@ -143,5 +143,44 @@ struct TextViewer: View {
             print("[!] failed to write data: \(error)")
         }
         return false
+    }
+}
+
+struct RunestoneEditor: UIViewRepresentable {
+    @Binding var text: String
+
+    func makeUIView(context: Context) -> TextView {
+        let textView = TextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.backgroundColor = .systemBackground
+        textView.editorDelegate = context.coordinator
+        
+        let state = TextViewState(text: text, theme: DefaultTheme())
+        textView.setState(state)
+        
+        return textView
+    }
+
+    func updateUIView(_ uiView: TextView, context: Context) {
+        if uiView.text != text {
+            let state = TextViewState(text: text, theme: DefaultTheme())
+            uiView.setState(state)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
+    }
+
+    class Coordinator: NSObject, TextViewDelegate {
+        var parent: RunestoneEditor
+
+        init(_ parent: RunestoneEditor) {
+            self.parent = parent
+        }
+
+        func textViewDidChange(_ textView: TextView) {
+            parent.text = textView.text
+        }
     }
 }

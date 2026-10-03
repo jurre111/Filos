@@ -280,7 +280,7 @@ struct FileBrowserView: View {
                 previewer = receivedPrev
             }
         }
-        .sheet(item: $previewer) { newPrev in
+        .fullScreenCover(item: $previewer) { newPrev in
             switch newPrev.type {
             case .info: InfoViewer(newPrev.file)
             case .plist: PlistViewer(newPrev.file.fileURL)

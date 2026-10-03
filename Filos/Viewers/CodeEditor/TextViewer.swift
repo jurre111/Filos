@@ -202,7 +202,6 @@ struct RunestoneEditor: UIViewRepresentable {
     func makeUIView(context: Context) -> TextView {
         let textView = TextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.backgroundColor = .systemBackground
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5)
         textView.showLineNumbers = true
         textView.editorDelegate = context.coordinator
@@ -222,9 +221,9 @@ struct RunestoneEditor: UIViewRepresentable {
 
     func getState() -> TextViewState {
         if let language {
-            return TextViewState(text: text, theme: DefaultTheme(), language: language)
+            return TextViewState(text: text, theme: FilosTheme(), language: language)
         }
-        return TextViewState(text: text, theme: DefaultTheme())
+        return TextViewState(text: text, theme: FilosTheme())
     }
 
     func makeCoordinator() -> Coordinator {

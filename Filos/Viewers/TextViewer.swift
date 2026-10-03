@@ -172,7 +172,7 @@ struct TextViewer: View {
         case "cpp", "cxx", "cc", "hpp", "hxx", "hh":
             return .cpp
         case "cs":
-            return .csharp
+            return .cSharp
         case "css":
             return .css
         case "html", "htm":
@@ -180,7 +180,7 @@ struct TextViewer: View {
         case "java":
             return .java
         case "js", "jsx":
-            return .javascript
+            return .javaScript
         case "md", "markdown":
             return .markdown
         case "py":

@@ -154,7 +154,7 @@ struct RunestoneEditor: UIViewRepresentable {
         let textView = TextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .systemBackground
-        textview.showLineNumbers = true
+        textView.showLineNumbers = true
         textView.editorDelegate = context.coordinator
         
         let state = TextViewState(text: text, theme: DefaultTheme(), language: .json)

@@ -45,6 +45,7 @@ struct TextViewer: View {
         NavigationView {
             VStack(alignment: .leading) {
                 RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
+                    .ignoresSafeArea(.container, edges: .bottom)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .frame(minHeight: 100, alignment: .topLeading)
@@ -85,8 +86,10 @@ struct TextViewer: View {
                             fileText = getFileText(fileURL)
                         }
                     } label: {
-                        ToolbarLabel("Save", symbol: "checkmark")
+                        Text("Save")
+                            .foregroundColor(file.writable ? .accent : .secondary)
                     }
+                    .disabled(!file.writable)
                 }
             }
             .onAppear {

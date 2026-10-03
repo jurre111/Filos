@@ -147,8 +147,8 @@ struct TextViewer: View {
 
 struct RunestoneEditor: UIViewRepresentable {
     @Binding var text: String
-    @Binding var editable: Bool
     var language: TreeSitterLanguage?
+    @Binding var editable: Bool
 
     func makeUIView(context: Context) -> TextView {
         let textView = TextView()

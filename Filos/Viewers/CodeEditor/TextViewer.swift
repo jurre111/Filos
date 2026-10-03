@@ -35,7 +35,6 @@ struct TextViewer: View {
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
-    @State private var isEditing = true
     
     init(_ fileURL: URL) {
         self.fileURL = fileURL
@@ -45,16 +44,7 @@ struct TextViewer: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                if isEditing {
-                    RunestoneEditor(text: $editText, language: fileLanguage)
-                } else {
-                    ScrollView {
-                        Text(fileText)
-                            .font(.system(size: CGFloat(textViewerSize), design: useMonospaced ? .monospaced : .default))
-                            .padding(5)
-                            .textSelection(.enabled)
-                    }
-                }
+                RunestoneEditor(text: $editText, language: fileLanguage, editable: file.writable)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .frame(minHeight: 100, alignment: .topLeading)
@@ -62,80 +52,40 @@ struct TextViewer: View {
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.insetGrouped)
             .noRefreshable()
-            .safeAreaInset(edge: .bottom) {
-                if !file.writable {
-                    HStack {
-                        Spacer()
-                        Button {
-                            Alertinator.shared.alert(title: "View-Only File", body: "You can only read this file.")
-                        } label: {
-                            Image(systemName: "lock")
-                                .padding(10)
-                        }
-                        .foregroundStyle(.accent)
-                        .padding(.trailing)
-                        .ignoresSafeArea()
-                    }
-                }
-            }
+            // .safeAreaInset(edge: .bottom) {
+            //     if !file.writable {
+            //         HStack {
+            //             Spacer()
+            //             Button {
+            //                 Alertinator.shared.alert(title: "View-Only File", body: "You can only read this file.")
+            //             } label: {
+            //                 Image(systemName: "lock")
+            //                     .padding(10)
+            //             }
+            //             .foregroundStyle(.accent)
+            //             .padding(.trailing)
+            //             .ignoresSafeArea()
+            //         }
+            //     }
+            // }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    if isEditing {
-                        Button {
-                            isEditing = false
-                            editText = fileText
-                        } label: {
-                            ToolbarLabel("Cancel", symbol: "xmark")
-                        }
-                    }
-                    
-                    Menu {
-                        if file.writable && !isEditing {
-                            Button {
-                                isEditing = true
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                        }
-                        
-                        Button {
-                            Haptic.shared.play(.soft)
-                            UIPasteboard.general.string = fileText
-                        } label: {
-                            Label("Copy", systemImage: "doc.on.doc")
-                        }
-                        
-                        Button {
-                            if let url = makeTemp(fileURL) {
-                                presentShareSheet(with: url)
-                            }
-                        } label: {
-                            Label("Share", systemImage: "square.and.arrow.up")
-                        }
+                    Button {
+                        editText = fileText
+                        dismiss()
                     } label: {
-                        Label("Menu", systemImage: "ellipsis")
-                            .labelStyle(.iconOnly)
+                        ToolbarLabel("Close", symbol: "xmark")
                     }
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
-                    if isEditing {
-                        Button(role: .adaptiveConfirm) {
-                            let res = writeTextIntoFile(fileURL, string: editText)
-                            if res {
-                                isEditing = false
-                                fileText = getFileText(fileURL)
-                            }
-                        } label: {
-                            ToolbarLabel("Save", symbol: "checkmark")
+                    Button(role: .adaptiveConfirm) {
+                        let res = writeTextIntoFile(fileURL, string: editText)
+                        if res {
+                            fileText = getFileText(fileURL)
                         }
-                    } else {
-                        Button {
-                            dismiss()
-                            mgr.refreshFiles.toggle()
-                        } label: {
-                            ToolbarLabel("Close", symbol: "xmark")
-                        }
+                    } label: {
+                        ToolbarLabel("Save", symbol: "checkmark")
                     }
                 }
             }
@@ -198,6 +148,7 @@ struct TextViewer: View {
 struct RunestoneEditor: UIViewRepresentable {
     @Binding var text: String
     var language: TreeSitterLanguage?
+    var editable: Bool
 
     func makeUIView(context: Context) -> TextView {
         let textView = TextView()
@@ -206,6 +157,7 @@ struct RunestoneEditor: UIViewRepresentable {
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5)
         textView.showLineNumbers = true
         textView.editorDelegate = context.coordinator
+        textView.isEditable = editable
         
         let state = getState()
         textView.setState(state)

@@ -44,7 +44,7 @@ struct TextViewer: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
-                RunestoneEditor(text: $editText, language: fileLanguage, editable: file.writable)
+                RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .frame(minHeight: 100, alignment: .topLeading)
@@ -147,8 +147,8 @@ struct TextViewer: View {
 
 struct RunestoneEditor: UIViewRepresentable {
     @Binding var text: String
+    @Binding var editable: Bool
     var language: TreeSitterLanguage?
-    var editable: Bool
 
     func makeUIView(context: Context) -> TextView {
         let textView = TextView()
@@ -166,6 +166,9 @@ struct RunestoneEditor: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: TextView, context: Context) {
+        if uiView.isEditable != editable {
+            uiView.isEditable = editable
+        }
         if uiView.text != text {
             let state = getState()
             uiView.setState(state)

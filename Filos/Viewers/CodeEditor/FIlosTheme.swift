@@ -7,8 +7,8 @@ class FilosTheme: Theme {
     let textColor: UIColor = .filos.foreground
 
 
-    let gutterBackgroundColor: UIColor = .filos.background
-    let gutterHairlineColor: UIColor = .filos.background
+    let gutterBackgroundColor: UIColor = .tertiarySystemBackground
+    let gutterHairlineColor: UIColor = .tertiarySystemBackground
 
 
     let lineNumberColor: UIColor = .filos.foreground

@@ -4,7 +4,7 @@ import UIKit
 extension UIColor {
     struct Filos {
         var background: UIColor {
-            return UIColor(red: 30 / 255, green: 30 / 255, blue: 30 / 255, alpha: 1)
+            return .secondarySystemBackground
         }
         var selection: UIColor {
             return UIColor(red: 220 / 255, green: 220 / 255, blue: 220 / 255, alpha: 1)

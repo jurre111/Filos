@@ -8,6 +8,18 @@
 import SwiftUI
 import Runestone
 import TreeSitterJSONRunestone
+import TreeSitterBashRunestone
+import TreeSitterCRunestone
+import TreeSitterCSharpRunestone
+import TreeSitterCPPRunestone
+import TreeSitterCSSRunestone
+import TreeSitterHTMLRunestone
+import TreeSitterJavaRunestone
+import TreeSitterJavaScriptRunestone
+import TreeSitterMarkdownRunestone
+import TreeSitterPythonRunestone
+import TreeSitterSwiftRunestone
+import TreeSitterYAMLRunestone
 
 
 struct TextViewer: View {
@@ -18,6 +30,7 @@ struct TextViewer: View {
     @AppStorage("useMonospaced") var useMonospaced = true
     
     var fileURL: URL
+    var fileLanguage: TreeSitterLanguage?
     
     @State private var file = clearFileItem
     @State private var fileText = ""
@@ -26,13 +39,14 @@ struct TextViewer: View {
     
     init(_ fileURL: URL) {
         self.fileURL = fileURL
+        self.fileLanguage = getLanguage(fileURL)
     }
     
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
                 if isEditing {
-                    RunestoneEditor(text: $editText)
+                    RunestoneEditor(text: $editText, language: fileLanguage)
                 } else {
                     ScrollView {
                         Text(fileText)
@@ -145,19 +159,53 @@ struct TextViewer: View {
         }
         return false
     }
+
+    private func getLanguage(_ url: URL) -> TreeSitterLanguageProvider? {
+        let ext = url.pathExtension.lowercased()
+        switch ext {
+        case "json":
+            return .json
+        case "sh", "bash":
+            return .bash
+        case "c":
+            return .c
+        case "cpp", "cxx", "cc", "hpp", "hxx", "hh":
+            return .cpp
+        case "cs":
+            return .csharp
+        case "css":
+            return .css
+        case "html", "htm":
+            return .html
+        case "java":
+            return .java
+        case "js", "jsx":
+            return .javascript
+        case "md", "markdown":
+            return .markdown
+        case "py":
+            return .python
+        case "swift":
+            return .swift
+        case "yaml", "yml":
+            return .yaml
+        }
+    }
 }
 
 struct RunestoneEditor: UIViewRepresentable {
     @Binding var text: String
+    var language: TreeSitterLanguage?
 
     func makeUIView(context: Context) -> TextView {
         let textView = TextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .systemBackground
+        textView.textContainerInset = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5) }
         textView.showLineNumbers = true
         textView.editorDelegate = context.coordinator
         
-        let state = TextViewState(text: text, theme: DefaultTheme(), language: .json)
+        let state = TextViewState(text: text, theme: DefaultTheme(), language: language)
         textView.setState(state)
         
         return textView
@@ -165,7 +213,7 @@ struct RunestoneEditor: UIViewRepresentable {
 
     func updateUIView(_ uiView: TextView, context: Context) {
         if uiView.text != text {
-            let state = TextViewState(text: text, theme: DefaultTheme(), language: .json)
+            let state = TextViewState(text: text, theme: DefaultTheme(), language: language)
             uiView.setState(state)
         }
     }

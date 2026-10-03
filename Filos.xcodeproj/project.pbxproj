@@ -10,6 +10,18 @@
 		CC48540A300BC5A0007D98D0 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = CC485409300BC5A0007D98D0 /* ZIPFoundation */; };
 		D7A1B2C3D4E5F60123456789 /* Runestone in Frameworks */ = {isa = PBXBuildFile; productRef = D7A1B2C3D4E5F6012345678A /* Runestone */; };
 		E8B2C3D4E5F60123456789A /* TreeSitterJSONRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = E8B2C3D4E5F60123456789B /* TreeSitterJSONRunestone */; };
+		A00000000000000000000001 /* TreeSitterBashRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000001 /* TreeSitterBashRunestone */; };
+		A00000000000000000000002 /* TreeSitterCRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000002 /* TreeSitterCRunestone */; };
+		A00000000000000000000003 /* TreeSitterCSharpRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000003 /* TreeSitterCSharpRunestone */; };
+		A00000000000000000000004 /* TreeSitterCPPRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000004 /* TreeSitterCPPRunestone */; };
+		A00000000000000000000005 /* TreeSitterCSSRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000005 /* TreeSitterCSSRunestone */; };
+		A00000000000000000000006 /* TreeSitterHTMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000006 /* TreeSitterHTMLRunestone */; };
+		A00000000000000000000007 /* TreeSitterJavaRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000007 /* TreeSitterJavaRunestone */; };
+		A00000000000000000000008 /* TreeSitterJavaScriptRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000008 /* TreeSitterJavaScriptRunestone */; };
+		A00000000000000000000009 /* TreeSitterMarkdownRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B00000000000000000000009 /* TreeSitterMarkdownRunestone */; };
+		A0000000000000000000000A /* TreeSitterPythonRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B0000000000000000000000A /* TreeSitterPythonRunestone */; };
+		A0000000000000000000000B /* TreeSitterSwiftRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B0000000000000000000000B /* TreeSitterSwiftRunestone */; };
+		A0000000000000000000000C /* TreeSitterYAMLRunestone in Frameworks */ = {isa = PBXBuildFile; productRef = B0000000000000000000000C /* TreeSitterYAMLRunestone */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +57,18 @@
 				CC48540A300BC5A0007D98D0 /* ZIPFoundation in Frameworks */,
 				D7A1B2C3D4E5F60123456789 /* Runestone in Frameworks */,
 				E8B2C3D4E5F60123456789A /* TreeSitterJSONRunestone in Frameworks */,
+				A00000000000000000000001 /* TreeSitterBashRunestone in Frameworks */,
+				A00000000000000000000002 /* TreeSitterCRunestone in Frameworks */,
+				A00000000000000000000003 /* TreeSitterCSharpRunestone in Frameworks */,
+				A00000000000000000000004 /* TreeSitterCPPRunestone in Frameworks */,
+				A00000000000000000000005 /* TreeSitterCSSRunestone in Frameworks */,
+				A00000000000000000000006 /* TreeSitterHTMLRunestone in Frameworks */,
+				A00000000000000000000007 /* TreeSitterJavaRunestone in Frameworks */,
+				A00000000000000000000008 /* TreeSitterJavaScriptRunestone in Frameworks */,
+				A00000000000000000000009 /* TreeSitterMarkdownRunestone in Frameworks */,
+				A0000000000000000000000A /* TreeSitterPythonRunestone in Frameworks */,
+				A0000000000000000000000B /* TreeSitterSwiftRunestone in Frameworks */,
+				A0000000000000000000000C /* TreeSitterYAMLRunestone in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +114,18 @@
 				CC485409300BC5A0007D98D0 /* ZIPFoundation */,
 				D7A1B2C3D4E5F6012345678A /* Runestone */,
 				E8B2C3D4E5F60123456789B /* TreeSitterJSONRunestone */,
+				B00000000000000000000001 /* TreeSitterBashRunestone */,
+				B00000000000000000000002 /* TreeSitterCRunestone */,
+				B00000000000000000000003 /* TreeSitterCSharpRunestone */,
+				B00000000000000000000004 /* TreeSitterCPPRunestone */,
+				B00000000000000000000005 /* TreeSitterCSSRunestone */,
+				B00000000000000000000006 /* TreeSitterHTMLRunestone */,
+				B00000000000000000000007 /* TreeSitterJavaRunestone */,
+				B00000000000000000000008 /* TreeSitterJavaScriptRunestone */,
+				B00000000000000000000009 /* TreeSitterMarkdownRunestone */,
+				B0000000000000000000000A /* TreeSitterPythonRunestone */,
+				B0000000000000000000000B /* TreeSitterSwiftRunestone */,
+				B0000000000000000000000C /* TreeSitterYAMLRunestone */,
 			);
 			productName = Filos;
 			productReference = 1531758F30094354008A92CE /* Filos.app */;

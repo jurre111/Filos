@@ -254,8 +254,8 @@ struct RunestoneEditor: UIViewRepresentable {
     }
 
     func getState() -> TextViewState {
-        if let language {
-            return TextViewState(text: text, theme: FilosTheme(), language: languages[language])
+        if let language = languages[language] {
+            return TextViewState(text: text, theme: FilosTheme(), language: language)
         }
         return TextViewState(text: text, theme: FilosTheme())
     }
@@ -266,7 +266,7 @@ struct RunestoneEditor: UIViewRepresentable {
 
     class Coordinator: NSObject, TextViewDelegate {
         var parent: RunestoneEditor
-        var language: TreeSitterLanguage?
+        var language: String                                                                                                                                                
 
         init(_ parent: RunestoneEditor) {
             self.parent = parent

@@ -95,10 +95,14 @@ struct TextViewer: View {
                             Label("Rename", systemImage: "applepencil")
                         }
                     } label: {
-                        HStack(spacing: 4) {
+                        HStack(alignment: .center, spacing: 4) {
                             Text(fileURL.deletingPathExtension().lastPathComponent)
-                            Image(systemName: "chevron.down")
+                                .foregroundStyle(.primary)
+                                .font(.headline)
+                            Image(systemName: "chevron.down.circle.fill")
+                                .foregroundColor(.secondary)
                                 .symbolRenderingMode(.hierarchical)
+                                .font(.headline)
                         }
                     }
                 }

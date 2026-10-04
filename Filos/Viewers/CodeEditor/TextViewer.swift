@@ -27,8 +27,8 @@ struct TextViewer: View {
     @Environment(\.dismiss) var dismiss
     
     @State var fileURL: URL
-    @State var fileLanguage: String = ""
     
+    @State var fileLanguage: String = ""
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""

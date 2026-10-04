@@ -35,7 +35,7 @@ struct TextViewer: View {
     
     init(_ fileURL: URL) {
         self.fileURL = fileURL
-        if getLanguage(at: fileURL) == nil {
+        if getLanguage(fileURL.pathExtension.lowercased()) == nil {
             self.fileLanguage = ""
         } else {
             self.fileLanguage = fileURL.pathExtension.lowercased()
@@ -76,7 +76,7 @@ struct TextViewer: View {
 
                     ToolbarItem(placement: .principal) {
                         Menu {
-                            Picker {
+                            Picker(selection: $fileLanguage) {
                                 Text("Plain Text").tag("")
                                 Text("JSON").tag("json")
                                 Text("Bash").tag("sh")

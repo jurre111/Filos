@@ -68,7 +68,7 @@ struct TextViewer: View {
     
     var body: some View {
         NavigationView {
-            RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
+            RunestoneEditor(text: $editText, language: $fileLanguage, editable: $file.writable)
                 .ignoresSafeArea(.container, edges: .bottom)
                 .navigationBarTitleDisplayMode(.inline)
             // .safeAreaInset(edge: .bottom) {

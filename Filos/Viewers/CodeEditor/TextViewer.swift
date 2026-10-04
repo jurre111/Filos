@@ -92,7 +92,7 @@ struct TextViewer: View {
                                 Label("Rename", systemImage: "applepencil")
                             }
                         } label: {
-                            HStack(alignment: .center, spacing: 5) {
+                            HStack(alignment: .center, spacing: 6) {
                                 Text(fileURL.deletingPathExtension().lastPathComponent)
                                     .font(.headline)
                                 Image(systemName: "chevron.down.circle.fill")
@@ -184,7 +184,13 @@ struct RunestoneEditor: UIViewRepresentable {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .filos.background
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5)
-        textView.showLineNumbers = true
+        textView.wrapLines = UserDefaults.standard.object(forKey: "wrapLines") ?? false
+        textView.lineNumbers = UserDefaults.standard.object(forKey: "lineNumbers") ?? true
+        textView.showTabs = UserDefaults.standard.object(forKey: "showTabs") ?? false
+        textView.showSpaces = UserDefaults.standard.object(forKey: "showSpaces") ?? false
+        textView.showLineBreaks = UserDefaults.standard.object(forKey: "showLineBreaks") ?? false
+        textView.showSoftLineBreaks = UserDefaults.standard.object(forKey: "showSoftLineBreaks") ?? false
+        textView.lineHeightMultiplier = UserDefaults.standard.object(forKey: "lineHeight") ?? 1.0
         textView.editorDelegate = context.coordinator
         textView.isEditable = editable
         

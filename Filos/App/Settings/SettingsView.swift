@@ -83,8 +83,11 @@ struct SettingsView: View {
                         }
                     }
                     Toggle("Monospaced Font", isOn: $useMonospaced)
+                    NavigationLink("More Options") {
+                        EditorSettingsView()
+                    }
                 } header: {
-                    HeaderLabel("Text Viewer", symbol: "doc.plaintext")
+                    HeaderLabel("File Editor", symbol: "doc.plaintext")
                 }
                 
                 Section {

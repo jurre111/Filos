@@ -1,3 +1,10 @@
+//
+//  EditorSettingsView.swift
+//  Filos
+//
+//  Created by jurre111 on 10/3/26.
+//
+
 enum HighlightName: String {
     case comment
     case constantBuiltin = "constant.builtin"

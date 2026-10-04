@@ -1,3 +1,10 @@
+//
+//  EditorSettingsView.swift
+//  Filos
+//
+//  Created by jurre111 on 10/3/26.
+//
+
 import Runestone
 import UIKit
 
@@ -30,8 +37,9 @@ class FilosTheme: Theme {
     let markedTextBackgroundColor: UIColor = .filos.foreground.withAlphaComponent(0.2)
 
     init() {
-        let fontSize: CGFloat = UserDefaults.standard.object(forKey: "textViewerSize") as? CGFloat ?? 11
-        font = .monospacedSystemFont(ofSize: fontSize, weight: .regular)
+        let fontSize = UserDefaults.standard.object(forKey: "textViewerSize") as? CGFloat ?? 11
+        let useMonospaced = UserDefaults.standard.object(forKey: "useMonospaced") as? Bool ?? true
+        font = useMonospaced ? .monospacedSystemFont(ofSize: fontSize, weight: .regular) : .systemFont(ofSize: fontSize, weight: .regular)
         lineNumberFont = .monospacedSystemFont(ofSize: fontSize, weight: .regular)
     }
 

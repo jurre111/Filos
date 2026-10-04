@@ -31,6 +31,7 @@ func getBIDFromMCM(_ url: URL) -> String? {
 
 func getNameFromInfP(_ url: URL) -> String? {
     guard let contents = try? FileManager.default.contentsOfDirectory(atPath: url.path) else { return url.lastPathComponent }
+    guard contents.contains(".com.apple.mobile_container_manager.metadata.plist") else { return nil }
     
     for item in contents where item.hasSuffix(".app") {
         let infopath = url.path + "/" + item + "/Info.plist"

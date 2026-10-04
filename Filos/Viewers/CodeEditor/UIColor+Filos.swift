@@ -1,3 +1,10 @@
+//
+//  EditorSettingsView.swift
+//  Filos
+//
+//  Created by jurre111 on 10/3/26.
+//
+
 import UIKit
 
 

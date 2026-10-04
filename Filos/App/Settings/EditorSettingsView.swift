@@ -34,6 +34,9 @@ struct EditorSettingsView: View {
                     }
                 }
             }
+            Section {
+                Toggle("")
+            }
         }
         .navigationTitle("File Editor Settings")
     }

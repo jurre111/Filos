@@ -23,28 +23,44 @@ import TreeSitterYAMLRunestone
 
 let languages: [String: TreeSitterLanguage] = [
     "json": .json,
-    "sh": .bash,
     "bash": .bash,
     "c": .c,
     "cpp": .cpp,
-    "cxx": .cpp,
-    "cc": .cpp,
-    "hpp": .cpp,
-    "hxx": .cpp,
-    "hh": .cpp,
     "cs": .cSharp,
     "css": .css,
     "html": .html,
-    "htm": .html,
     "java": .java,
     "js": .javaScript,
-    "jsx": .javaScript,
     "md": .markdown,
-    "markdown": .markdown,
-    "py": .python,
+    "python": .python,
     "swift": .swift,
-    "yaml": .yaml,
-    "yml": .yaml
+    "yaml": .yaml
+]
+
+let extensions: [String: String] = [
+    "json": "json",
+    "sh": "bash",
+    "bash": "bash",
+    "c": "c",
+    "cpp": "cpp",
+    "cxx": "cpp",
+    "cc": "cpp",
+    "hpp": "cpp",
+    "hxx": "cpp",
+    "hh": "cpp",
+    "cs": "cs",
+    "css": "css",
+    "html": "html",
+    "htm": "html",
+    "java": "java",
+    "js": "js",
+    "jsx": "js",
+    "md": "md",
+    "markdown": "md",
+    "py": "python",
+    "swift": "swift",
+    "yaml": "yaml",
+    "yml": "yaml"
 ]
 
 struct TextViewer: View {
@@ -61,8 +77,10 @@ struct TextViewer: View {
 
     init(_ fileURL: URL) {
         self.fileURL = fileURL
-
-        _fileLanguage = State(initialValue: languages[fileURL.pathExtension.lowercased()])
+        if let lang = extensions[fileURL.pathExtension.lowercased()] {
+            _selectedLanguage = State(initialValue: lang)
+            _fileLanguage = State(initialValue: languages[lang])
+        }
     }
     
     
@@ -110,7 +128,7 @@ struct TextViewer: View {
                                 )) {
                                     Text("Plain Text").tag("")
                                     Text("JSON").tag("json")
-                                    Text("Bash").tag("sh")
+                                    Text("Bash").tag("bash")
                                     Text("C").tag("c")
                                     Text("C++").tag("cpp")
                                     Text("C#").tag("cs")
@@ -119,7 +137,7 @@ struct TextViewer: View {
                                     Text("Java").tag("java")
                                     Text("JavaScript").tag("js")
                                     Text("Markdown").tag("md")
-                                    Text("Python").tag("py")
+                                    Text("Python").tag("python")
                                     Text("Swift").tag("swift")
                                     Text("YAML").tag("yaml")
                                 }

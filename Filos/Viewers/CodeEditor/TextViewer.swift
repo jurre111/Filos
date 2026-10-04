@@ -69,8 +69,7 @@ struct TextViewer: View {
     
     @State var fileURL: URL
     
-    @State var fileLanguage: TreeSitterLanguage?
-    @State var selectedLanguage: String = ""
+    @State var fileLanguage: String = ""
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
@@ -78,8 +77,7 @@ struct TextViewer: View {
     init(_ fileURL: URL) {
         self.fileURL = fileURL
         if let lang = extensions[fileURL.pathExtension.lowercased()] {
-            _selectedLanguage = State(initialValue: lang)
-            _fileLanguage = State(initialValue: languages[lang])
+            _fileLanguage = State(initialValue: lang)
         }
     }
     
@@ -119,13 +117,7 @@ struct TextViewer: View {
                     ToolbarItem(placement: .principal) {
                         Menu {
                             Menu {
-                                Picker("", selection: Binding(
-                                    get: { selectedLanguage },
-                                    set: { newValue in
-                                        selectedLanguage = newValue
-                                        fileLanguage = languages[newValue]
-                                    }
-                                )) {
+                                Picker("", selection: $fileLanguage) {
                                     Text("Plain Text").tag("")
                                     Text("JSON").tag("json")
                                     Text("Bash").tag("bash")
@@ -227,7 +219,7 @@ struct TextViewer: View {
 
 struct RunestoneEditor: UIViewRepresentable {
     @Binding var text: String
-    @Binding var language: TreeSitterLanguage?
+    @Binding var language: String
     @Binding var editable: Bool
 
     func makeUIView(context: Context) -> TextView {
@@ -255,7 +247,7 @@ struct RunestoneEditor: UIViewRepresentable {
         if uiView.isEditable != editable {
             uiView.isEditable = editable
         }
-        if uiView.text != text {
+        if uiView.text != text || context.coordinator.language != language {
             let state = getState()
             uiView.setState(state)
         }
@@ -263,7 +255,7 @@ struct RunestoneEditor: UIViewRepresentable {
 
     func getState() -> TextViewState {
         if let language {
-            return TextViewState(text: text, theme: FilosTheme(), language: language)
+            return TextViewState(text: text, theme: FilosTheme(), language: languages[language])
         }
         return TextViewState(text: text, theme: FilosTheme())
     }
@@ -274,9 +266,11 @@ struct RunestoneEditor: UIViewRepresentable {
 
     class Coordinator: NSObject, TextViewDelegate {
         var parent: RunestoneEditor
+        var language: TreeSitterLanguage?
 
         init(_ parent: RunestoneEditor) {
             self.parent = parent
+            self.language = parent.language
         }
 
         func textViewDidChange(_ textView: TextView) {

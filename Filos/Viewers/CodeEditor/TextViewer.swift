@@ -69,7 +69,8 @@ struct TextViewer: View {
                         editText = fileText
                         dismiss()
                     } label: {
-                        ToolbarLabel("Close", symbol: "xmark")
+                        Text("Close")
+                            .bold()
                     }
                 }
 
@@ -97,14 +98,15 @@ struct TextViewer: View {
                     } label: {
                         HStack(alignment: .center, spacing: 4) {
                             Text(fileURL.deletingPathExtension().lastPathComponent)
-                                .foregroundStyle(.primary)
                                 .font(.headline)
                             Image(systemName: "chevron.down.circle.fill")
+                                .font(.caption)
+                                .fontWeight(.bold)
                                 .foregroundColor(.secondary)
                                 .symbolRenderingMode(.hierarchical)
-                                .font(.headline)
                         }
                     }
+                    .tint(.primary)
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
@@ -115,6 +117,7 @@ struct TextViewer: View {
                         }
                     } label: {
                         Text("Save")
+                            .bold()
                             .foregroundColor(file.writable ? .accent : .secondary)
                     }
                     .disabled(!file.writable)

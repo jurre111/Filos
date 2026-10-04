@@ -95,7 +95,7 @@ struct TextViewer: View {
                                 Text(fileURL.deletingPathExtension().lastPathComponent)
                                     .font(.headline)
                                 Image(systemName: "chevron.down.circle.fill")
-                                    .font(.caption.bold())
+                                    .font(.footnote.bold())
                                     .foregroundColor(.secondary)
                                     .symbolRenderingMode(.hierarchical)
                             }
@@ -182,6 +182,7 @@ struct RunestoneEditor: UIViewRepresentable {
         let textView = TextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .filos.background
+        textView.contentInsetAdjustmentBehavior = .never
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5)
         textView.showLineNumbers = true
         textView.editorDelegate = context.coordinator

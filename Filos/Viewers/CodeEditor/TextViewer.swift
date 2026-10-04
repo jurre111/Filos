@@ -100,27 +100,30 @@ struct TextViewer: View {
 
                     ToolbarItem(placement: .principal) {
                         Menu {
-                            Picker(selection: Binding(
-                                get: { selectedLanguage },
-                                set: { newValue in
-                                    selectedLanguage = newValue
-                                    fileLanguage = languages[newValue]
+                            Menu {
+                                Picker("", selection: Binding(
+                                    get: { selectedLanguage },
+                                    set: { newValue in
+                                        selectedLanguage = newValue
+                                        fileLanguage = languages[newValue]
+                                    }
+                                )) {
+                                    Text("Plain Text").tag("")
+                                    Text("JSON").tag("json")
+                                    Text("Bash").tag("sh")
+                                    Text("C").tag("c")
+                                    Text("C++").tag("cpp")
+                                    Text("C#").tag("cs")
+                                    Text("CSS").tag("css")
+                                    Text("HTML").tag("html")
+                                    Text("Java").tag("java")
+                                    Text("JavaScript").tag("js")
+                                    Text("Markdown").tag("md")
+                                    Text("Python").tag("py")
+                                    Text("Swift").tag("swift")
+                                    Text("YAML").tag("yaml")
                                 }
-                            )) {
-                                Text("Plain Text").tag("")
-                                Text("JSON").tag("json")
-                                Text("Bash").tag("sh")
-                                Text("C").tag("c")
-                                Text("C++").tag("cpp")
-                                Text("C#").tag("cs")
-                                Text("CSS").tag("css")
-                                Text("HTML").tag("html")
-                                Text("Java").tag("java")
-                                Text("JavaScript").tag("js")
-                                Text("Markdown").tag("md")
-                                Text("Python").tag("py")
-                                Text("Swift").tag("swift")
-                                Text("YAML").tag("yaml")
+                                .pickerStyle(.inline)
                             } label: {
                                 Label("Language", systemImage: "character.book.closed")
                             }

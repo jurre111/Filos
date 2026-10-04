@@ -92,7 +92,7 @@ struct TextViewer: View {
                                 Label("Rename", systemImage: "applepencil")
                             }
                         } label: {
-                            HStack(alignment: .center, spacing: 4) {
+                            HStack(alignment: .center, spacing: 5) {
                                 Text(fileURL.deletingPathExtension().lastPathComponent)
                                     .font(.headline)
                                 Image(systemName: "chevron.down.circle.fill")

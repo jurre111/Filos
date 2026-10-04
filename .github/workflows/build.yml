@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: filos-ipa
-          path: ${APPLICATION_NAME}_${APP_VERSION}_release.ipa
+          path: ${{ env.IPA_NAME }}
 
       - name: get last 12h commits
         run: |
@@ -75,4 +75,4 @@ jobs:
             --title "Nightly" \
             --prerelease
       
-          gh release upload nightly ${APPLICATION_NAME}_${APP_VERSION}_release.ipa --clobber
+          gh release upload nightly ${IPA_NAME} --clobber

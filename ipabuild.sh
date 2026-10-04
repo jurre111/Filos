@@ -86,5 +86,6 @@ elif [[ $* == *--ts* ]]; then
 mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" ./"${APPLICATION_NAME}_${APP_VERSION}_trollstore".ipa
 else
 mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" ./"${APPLICATION_NAME}_${APP_VERSION}_release".ipa
+export IPA_NAME="${APPLICATION_NAME}_${APP_VERSION}_release.ipa"
 fi
 rm -rf "$WORKING_LOCATION/build/"

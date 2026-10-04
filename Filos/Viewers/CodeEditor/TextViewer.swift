@@ -173,7 +173,7 @@ struct TextViewer: View {
         return false
     }
 
-    private func getLanguage(_ ext: String) -> TreeSitterLanguage? {
+    private static func getLanguage(_ ext: String) -> TreeSitterLanguage? {
         switch ext {
         case "json":
             return .json

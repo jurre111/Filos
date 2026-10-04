@@ -40,13 +40,8 @@ struct TextViewer: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
-                    .ignoresSafeArea(.container, edges: .bottom)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .frame(minHeight: 100, alignment: .topLeading)
-            .noRefreshable()
+            RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
+                .ignoresSafeArea(.container, edges: .bottom)
             // .safeAreaInset(edge: .bottom) {
             //     if !file.writable {
             //         HStack {
@@ -63,74 +58,73 @@ struct TextViewer: View {
             //         }
             //     }
             // }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        editText = fileText
-                        dismiss()
-                    } label: {
-                        Text("Close")
-                            .bold()
-                    }
-                }
-
-                ToolbarItem(placement: .principal) {
-                    Menu {
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
                         Button {
-                            if let url = makeTemp(fileURL) {
-                                presentShareSheet(with: url)
+                            editText = fileText
+                            dismiss()
+                        } label: {
+                            Text("Close")
+                                .bold()
+                        }
+                    }
+
+                    ToolbarItem(placement: .principal) {
+                        Menu {
+                            Button {
+                                if let url = makeTemp(fileURL) {
+                                    presentShareSheet(with: url)
+                                }
+                            } label: {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                            Button {
+                                Haptic.shared.play(.soft)
+                                UIPasteboard.general.string = fileText
+                            } label: {
+                                Label("Copy", systemImage: "doc.on.doc")
+                            }
+                            Button {
+                                Haptic.shared.play(.soft)
+                                UIPasteboard.general.string = fileText
+                            } label: {
+                                Label("Rename", systemImage: "applepencil")
                             }
                         } label: {
-                            Label("Share", systemImage: "square.and.arrow.up")
+                            HStack(alignment: .center, spacing: 4) {
+                                Text(fileURL.deletingPathExtension().lastPathComponent)
+                                    .font(.headline)
+                                Image(systemName: "chevron.down.circle.fill")
+                                    .font(.caption.bold())
+                                    .foregroundColor(.secondary)
+                                    .symbolRenderingMode(.hierarchical)
+                            }
                         }
-                        Button {
-                            Haptic.shared.play(.soft)
-                            UIPasteboard.general.string = fileText
-                        } label: {
-                            Label("Copy", systemImage: "doc.on.doc")
-                        }
-                        Button {
-                            Haptic.shared.play(.soft)
-                            UIPasteboard.general.string = fileText
-                        } label: {
-                            Label("Rename", systemImage: "applepencil")
-                        }
-                    } label: {
-                        HStack(alignment: .center, spacing: 4) {
-                            Text(fileURL.deletingPathExtension().lastPathComponent)
-                                .font(.headline)
-                            Image(systemName: "chevron.down.circle.fill")
-                                .font(.caption)
-                                .fontWeight(.bold)
-                                .foregroundColor(.secondary)
-                                .symbolRenderingMode(.hierarchical)
-                        }
+                        .tint(.primary)
                     }
-                    .tint(.primary)
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(role: .adaptiveConfirm) {
-                        let res = writeTextIntoFile(fileURL, string: editText)
-                        if res {
-                            fileText = getFileText(fileURL)
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(role: .adaptiveConfirm) {
+                            let res = writeTextIntoFile(fileURL, string: editText)
+                            if res {
+                                fileText = getFileText(fileURL)
+                            }
+                        } label: {
+                            Text("Save")
+                                .bold()
+                                .foregroundColor(file.writable ? .accent : .secondary)
                         }
-                    } label: {
-                        Text("Save")
-                            .bold()
-                            .foregroundColor(file.writable ? .accent : .secondary)
+                        .disabled(!file.writable)
                     }
-                    .disabled(!file.writable)
                 }
-            }
-            .onAppear {
-                file = getFileItem(at: fileURL)
-                let text = getFileText(fileURL)
-                fileText = text
-                editText = text
-            }
         }
         .navigationViewStyle(.stack)
+        .onAppear {
+            file = getFileItem(at: fileURL)
+            let text = getFileText(fileURL)
+            fileText = text
+            editText = text
+        }
     }
     
     private func writeTextIntoFile(_ url: URL, string: String) -> Bool {

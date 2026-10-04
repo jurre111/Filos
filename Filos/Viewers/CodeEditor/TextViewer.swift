@@ -42,6 +42,7 @@ struct TextViewer: View {
         NavigationView {
             RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
                 .ignoresSafeArea(.container, edges: .bottom)
+                .navigationBarTitleDisplayMode(.inline)
             // .safeAreaInset(edge: .bottom) {
             //     if !file.writable {
             //         HStack {
@@ -182,7 +183,6 @@ struct RunestoneEditor: UIViewRepresentable {
         let textView = TextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .filos.background
-        textView.contentInsetAdjustmentBehavior = .never
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5)
         textView.showLineNumbers = true
         textView.editorDelegate = context.coordinator

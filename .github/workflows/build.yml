@@ -38,24 +38,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: filos-ipa
-          path: Filos.ipa
-
-
-  release:
-    if: github.event_name != 'pull_request'
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: download ipa
-        uses: actions/download-artifact@v4
-        with:
-          name: filos-ipa
+          path: ${APPLICATION_NAME}_${APP_VERSION}_release.ipa
 
       - name: get last 12h commits
         run: |
@@ -92,4 +75,4 @@ jobs:
             --title "Nightly" \
             --prerelease
       
-          gh release upload nightly Filos.ipa --clobber
+          gh release upload nightly ${APPLICATION_NAME}_${APP_VERSION}_release.ipa --clobber

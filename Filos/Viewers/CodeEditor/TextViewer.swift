@@ -86,18 +86,30 @@ struct TextViewer: View {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
                             Button {
-                                Haptic.shared.play(.soft)
-                                UIPasteboard.general.string = fileText
+                                Alertinator.shared.prompt(title: "What would you like to call this file?", text: file.name, completion: { result in
+                                    if let name = result {
+                                        let res = renameFile(fileURL, to: name)
+                                        if res {
+                                            file.name = name
+                                            fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
+                                            mgr.refreshFiles.toggle()
+                                        } else {
+                                            Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)
+                                        }
+                                    }
+                                })
                             } label: {
                                 Label("Rename", systemImage: "applepencil")
+                                    .foregroundStyle(file.writable ? .primary : .secondary)
                             }
+                            .disabled(!file.writable)
                         } label: {
                             HStack(alignment: .center, spacing: 6) {
                                 Text(fileURL.deletingPathExtension().lastPathComponent)
                                     .font(.headline)
                                 Image(systemName: "chevron.down.circle.fill")
                                     .font(.footnote.bold())
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                                     .symbolRenderingMode(.hierarchical)
                             }
                         }
@@ -113,7 +125,7 @@ struct TextViewer: View {
                         } label: {
                             Text("Save")
                                 .bold()
-                                .foregroundColor(file.writable ? .accent : .secondary)
+                                .foregroundStyle(file.writable ? .accent : .secondary)
                         }
                         .disabled(!file.writable)
                     }

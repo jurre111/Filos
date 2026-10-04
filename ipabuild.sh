@@ -85,7 +85,10 @@ mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" ./"${APPLICATION_NAME}_${APP_
 elif [[ $* == *--ts* ]]; then
 mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" ./"${APPLICATION_NAME}_${APP_VERSION}_trollstore".ipa
 else
-mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" ./"${APPLICATION_NAME}_${APP_VERSION}_release".ipa
-export IPA_NAME="${APPLICATION_NAME}_${APP_VERSION}_release.ipa"
+IPA_NAME="${APPLICATION_NAME}_${APP_VERSION}_release.ipa"
+mv "$WORKING_LOCATION/build/$APPLICATION_NAME.ipa" "./${IPA_NAME}"
+if [ -n "$GITHUB_ENV" ]; then
+    echo "IPA_NAME=$IPA_NAME" >> "$GITHUB_ENV"
+fi
 fi
 rm -rf "$WORKING_LOCATION/build/"

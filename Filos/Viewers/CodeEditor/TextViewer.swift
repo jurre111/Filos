@@ -27,20 +27,12 @@ struct TextViewer: View {
     @Environment(\.dismiss) var dismiss
     
     @State var fileURL: URL
-    @State var fileLanguage: String
+    @State var fileLanguage: String = ""
     
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
     
-    init(_ fileURL: URL) {
-        self.fileURL = fileURL
-        if getLanguage(fileURL.pathExtension.lowercased()) == nil {
-            _fileLanguage = State(initialValue: "")
-        } else {
-            _fileLanguage = State(initialValue: fileURL.pathExtension.lowercased())
-        }
-    }
     
     var body: some View {
         NavigationView {
@@ -159,6 +151,10 @@ struct TextViewer: View {
             let text = getFileText(fileURL)
             fileText = text
             editText = text
+
+            if getLanguage(fileURL.pathExtension.lowercased()) != nil {
+                fileLanguage = fileURL.pathExtension.lowercased()
+            }
         }
     }
     
@@ -173,7 +169,7 @@ struct TextViewer: View {
         return false
     }
 
-    private static func getLanguage(_ ext: String) -> TreeSitterLanguage? {
+    private func getLanguage(_ ext: String) -> TreeSitterLanguage? {
         switch ext {
         case "json":
             return .json

@@ -18,28 +18,23 @@ struct EditorSettingsView: View {
     @AppStorage("lineHeight") var lineHeight = 1.0
     
     var body: some View {
-        NavigationView {
-            List {
-                Section {
-                    Toggle("Wrap Lines", isOn: $wrapLines)
-                    Toggle("Show Line Numbers", isOn: $lineNumbers)
-                    Toggle("Show Tabs", isOn: $showTabs)
-                    Toggle("Show Spaces", isOn: $showSpaces)
-                    Toggle("Show Line Breaks", isOn: $showLineBreaks)
-                    Toggle("Show Soft Line Breaks", isOn: $showSoftLineBreaks)
-                    Stepper(value: $lineHeight, in: 0.5...2.0, step: 0.1) {
-                        HStack {
-                            Text("Line height")
-                            Spacer()
-                            Text(lineHeight.description)
-                        }
+        List {
+            Section {
+                Toggle("Wrap Lines", isOn: $wrapLines)
+                Toggle("Show Line Numbers", isOn: $lineNumbers)
+                Toggle("Show Tabs", isOn: $showTabs)
+                Toggle("Show Spaces", isOn: $showSpaces)
+                Toggle("Show Line Breaks", isOn: $showLineBreaks)
+                Toggle("Show Soft Line Breaks", isOn: $showSoftLineBreaks)
+                Stepper(value: $lineHeight, in: 0.5...2.0, step: 0.1) {
+                    HStack {
+                        Text("Line height")
+                        Spacer()
+                        Text(String(format: "%.1f", lineHeight))
                     }
                 }
             }
-            .navigationTitle("File Editor Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .noRefreshable()
         }
-        .navigationViewStyle(.stack)
+        .navigationTitle("File Editor Settings")
     }
 }

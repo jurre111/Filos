@@ -36,9 +36,9 @@ struct TextViewer: View {
     init(_ fileURL: URL) {
         self.fileURL = fileURL
         if getLanguage(fileURL.pathExtension.lowercased()) == nil {
-            self.fileLanguage = ""
+            _fileLanguage = State(initialValue: "")
         } else {
-            self.fileLanguage = fileURL.pathExtension.lowercased()
+            _fileLanguage = State(initialValue: fileURL.pathExtension.lowercased())
         }
     }
     

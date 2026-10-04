@@ -21,6 +21,31 @@ import TreeSitterPythonRunestone
 import TreeSitterSwiftRunestone
 import TreeSitterYAMLRunestone
 
+let languages: [String: TreeSitterLanguage] = [
+    "json": .json,
+    "sh": .bash,
+    "bash": .bash,
+    "c": .c,
+    "cpp": .cpp,
+    "cxx": .cpp,
+    "cc": .cpp,
+    "hpp": .cpp,
+    "hxx": .cpp,
+    "hh": .cpp,
+    "cs": .cSharp,
+    "css": .css,
+    "html": .html,
+    "htm": .html,
+    "java": .java,
+    "js": .javaScript,
+    "jsx": .javaScript,
+    "md": .markdown,
+    "markdown": .markdown,
+    "py": .python,
+    "swift": .swift,
+    "yaml": .yaml,
+    "yml": .yaml
+]
 
 struct TextViewer: View {
     @EnvironmentObject var mgr: FilosManager
@@ -28,15 +53,23 @@ struct TextViewer: View {
     
     @State var fileURL: URL
     
-    @State var fileLanguage: String = ""
+    @State var fileLanguage: TreeSitterLanguage?
+    @State var selectedLanguage: String = ""
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
+
+    init(_ fileURL: URL) {
+        self.fileURL = fileURL
+
+        let ext = fileURL.pathExtension.lowercased()
+        _fileLanguage = State(initialValue: languages[fileURL.pathExtension.lowercased()])
+    }
     
     
     var body: some View {
         NavigationView {
-            RunestoneEditor(text: $editText, language: getLanguage(fileLanguage), editable: $file.writable)
+            RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
                 .ignoresSafeArea(.container, edges: .bottom)
                 .navigationBarTitleDisplayMode(.inline)
             // .safeAreaInset(edge: .bottom) {
@@ -68,7 +101,13 @@ struct TextViewer: View {
 
                     ToolbarItem(placement: .principal) {
                         Menu {
-                            Picker(selection: $fileLanguage) {
+                            Picker(selection: Binding(
+                                get: { selectedLanguage },
+                                set: { newValue in
+                                    selectedLanguage = newValue
+                                    fileLanguage = languages[newValue]
+                                }
+                            )) {
                                 Text("Plain Text").tag("")
                                 Text("JSON").tag("json")
                                 Text("Bash").tag("sh")
@@ -167,39 +206,6 @@ struct TextViewer: View {
             print("[!] failed to write data: \(error)")
         }
         return false
-    }
-
-    private func getLanguage(_ ext: String) -> TreeSitterLanguage? {
-        switch ext {
-        case "json":
-            return .json
-        case "sh", "bash":
-            return .bash
-        case "c":
-            return .c
-        case "cpp", "cxx", "cc", "hpp", "hxx", "hh":
-            return .cpp
-        case "cs":
-            return .cSharp
-        case "css":
-            return .css
-        case "html", "htm":
-            return .html
-        case "java":
-            return .java
-        case "js", "jsx":
-            return .javaScript
-        case "md", "markdown":
-            return .markdown
-        case "py":
-            return .python
-        case "swift":
-            return .swift
-        case "yaml", "yml":
-            return .yaml
-        default:
-            return nil
-        }
     }
 }
 

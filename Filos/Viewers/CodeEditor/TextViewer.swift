@@ -26,9 +26,6 @@ struct TextViewer: View {
     @EnvironmentObject var mgr: FilosManager
     @Environment(\.dismiss) var dismiss
     
-    @AppStorage("textViewerSize") var textViewerSize = 11
-    @AppStorage("useMonospaced") var useMonospaced = true
-    
     var fileURL: URL
     var fileLanguage: TreeSitterLanguage?
     
@@ -49,9 +46,6 @@ struct TextViewer: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .frame(minHeight: 100, alignment: .topLeading)
-            .navigationTitle(fileURL.deletingPathExtension().lastPathComponent)
-            .navigationBarTitleDisplayMode(.inline)
-            .listStyle(.insetGrouped)
             .noRefreshable()
             // .safeAreaInset(edge: .bottom) {
             //     if !file.writable {
@@ -76,6 +70,36 @@ struct TextViewer: View {
                         dismiss()
                     } label: {
                         ToolbarLabel("Close", symbol: "xmark")
+                    }
+                }
+
+                ToolbarItem(placement: .principal) {
+                    Menu {
+                        Button {
+                            if let url = makeTemp(fileURL) {
+                                presentShareSheet(with: url)
+                            }
+                        } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                        Button {
+                            Haptic.shared.play(.soft)
+                            UIPasteboard.general.string = fileText
+                        } label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        }
+                        Button {
+                            Haptic.shared.play(.soft)
+                            UIPasteboard.general.string = fileText
+                        } label: {
+                            Label("Rename", systemImage: "applepencil")
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Text(fileURL.deletingPathExtension().lastPathComponent)
+                            Image(systemName: "chevron.down")
+                                .symbolRenderingMode(.hierarchical)
+                        }
                     }
                 }
                 

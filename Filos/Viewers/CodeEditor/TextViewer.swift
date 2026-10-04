@@ -62,7 +62,6 @@ struct TextViewer: View {
     init(_ fileURL: URL) {
         self.fileURL = fileURL
 
-        let ext = fileURL.pathExtension.lowercased()
         _fileLanguage = State(initialValue: languages[fileURL.pathExtension.lowercased()])
     }
     
@@ -190,10 +189,6 @@ struct TextViewer: View {
             let text = getFileText(fileURL)
             fileText = text
             editText = text
-
-            if getLanguage(fileURL.pathExtension.lowercased()) != nil {
-                fileLanguage = fileURL.pathExtension.lowercased()
-            }
         }
     }
     

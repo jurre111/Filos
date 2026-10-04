@@ -26,21 +26,17 @@ struct TextViewer: View {
     @EnvironmentObject var mgr: FilosManager
     @Environment(\.dismiss) var dismiss
     
-    var fileURL: URL
-    var fileLanguage: TreeSitterLanguage?
+    @State var fileURL: URL
     
+    @State var fileLanguage: String = ""
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
     
-    init(_ fileURL: URL) {
-        self.fileURL = fileURL
-        self.fileLanguage = getLanguage(fileURL)
-    }
     
     var body: some View {
         NavigationView {
-            RunestoneEditor(text: $editText, language: fileLanguage, editable: $file.writable)
+            RunestoneEditor(text: $editText, language: getLanguage(fileLanguage), editable: $file.writable)
                 .ignoresSafeArea(.container, edges: .bottom)
                 .navigationBarTitleDisplayMode(.inline)
             // .safeAreaInset(edge: .bottom) {
@@ -72,6 +68,24 @@ struct TextViewer: View {
 
                     ToolbarItem(placement: .principal) {
                         Menu {
+                            Picker(selection: $fileLanguage) {
+                                Text("Plain Text").tag("")
+                                Text("JSON").tag("json")
+                                Text("Bash").tag("sh")
+                                Text("C").tag("c")
+                                Text("C++").tag("cpp")
+                                Text("C#").tag("cs")
+                                Text("CSS").tag("css")
+                                Text("HTML").tag("html")
+                                Text("Java").tag("java")
+                                Text("JavaScript").tag("js")
+                                Text("Markdown").tag("md")
+                                Text("Python").tag("py")
+                                Text("Swift").tag("swift")
+                                Text("YAML").tag("yaml")
+                            } label: {
+                                Label("Language", systemImage: "character.book.closed")
+                            }
                             Button {
                                 if let url = makeTemp(fileURL) {
                                     presentShareSheet(with: url)
@@ -86,18 +100,30 @@ struct TextViewer: View {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
                             Button {
-                                Haptic.shared.play(.soft)
-                                UIPasteboard.general.string = fileText
+                                Alertinator.shared.prompt(title: "What would you like to call this file?", text: file.name, completion: { result in
+                                    if let name = result {
+                                        let res = renameFile(fileURL, to: name)
+                                        if res {
+                                            file.name = name
+                                            fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
+                                            mgr.refreshFiles.toggle()
+                                        } else {
+                                            Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)
+                                        }
+                                    }
+                                })
                             } label: {
                                 Label("Rename", systemImage: "applepencil")
+                                    .foregroundStyle(file.writable ? .primary : .secondary)
                             }
+                            .disabled(!file.writable)
                         } label: {
                             HStack(alignment: .center, spacing: 6) {
                                 Text(fileURL.deletingPathExtension().lastPathComponent)
                                     .font(.headline)
                                 Image(systemName: "chevron.down.circle.fill")
                                     .font(.footnote.bold())
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                                     .symbolRenderingMode(.hierarchical)
                             }
                         }
@@ -113,7 +139,7 @@ struct TextViewer: View {
                         } label: {
                             Text("Save")
                                 .bold()
-                                .foregroundColor(file.writable ? .accent : .secondary)
+                                .foregroundStyle(file.writable ? .accent : .secondary)
                         }
                         .disabled(!file.writable)
                     }
@@ -125,6 +151,10 @@ struct TextViewer: View {
             let text = getFileText(fileURL)
             fileText = text
             editText = text
+
+            if getLanguage(fileURL.pathExtension.lowercased()) != nil {
+                fileLanguage = fileURL.pathExtension.lowercased()
+            }
         }
     }
     
@@ -139,8 +169,7 @@ struct TextViewer: View {
         return false
     }
 
-    private func getLanguage(_ url: URL) -> TreeSitterLanguage? {
-        let ext = url.pathExtension.lowercased()
+    private func getLanguage(_ ext: String) -> TreeSitterLanguage? {
         switch ext {
         case "json":
             return .json

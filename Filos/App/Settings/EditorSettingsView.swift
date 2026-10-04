@@ -26,7 +26,7 @@ struct EditorSettingsView: View {
                 Toggle("Show Spaces", isOn: $showSpaces)
                 Toggle("Show Line Breaks", isOn: $showLineBreaks)
                 Toggle("Show Soft Line Breaks", isOn: $showSoftLineBreaks)
-                Stepper(value: $lineHeight, in: 0.5...2.0, step: 0.1) {
+                Stepper(value: $lineHeight, in: 1.0...3.0, step: 0.1) {
                     HStack {
                         Text("Line height")
                         Spacer()

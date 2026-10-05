@@ -107,6 +107,7 @@ struct TextViewer: View {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             editText = fileText
+                            mgr.refreshFiles = fileURL.deletingLastPathComponent()
                             dismiss()
                         } label: {
                             Text("Close")
@@ -157,7 +158,6 @@ struct TextViewer: View {
                                         if res {
                                             file.name = name
                                             fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
-                                            mgr.refreshFiles.toggle()
                                         } else {
                                             Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)
                                         }

@@ -250,6 +250,7 @@ struct RunestoneEditor: UIViewRepresentable {
         if uiView.text != text || context.coordinator.language != language {
             let state = getState()
             uiView.setState(state)
+            context.coordinator.language = language
         }
     }
 

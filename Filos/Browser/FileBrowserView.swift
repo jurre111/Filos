@@ -158,7 +158,7 @@ struct FileBrowserView: View {
                                         do {
                                             let fileURL = item.fileURL.appendingPathComponent(name)
                                             try Data().write(to: fileURL)
-                                            mgr.refreshFiles.toggle()
+                                            mgr.refreshFiles = item.fileURL
                                         } catch {
                                             print("(fm) failed to create file: \(error)")
                                             
@@ -177,7 +177,7 @@ struct FileBrowserView: View {
                                             let fileURL = item.fileURL.appendingPathComponent(name + ".plist")
                                             let data = try PropertyListSerialization.data(fromPropertyList: NSMutableDictionary(), format: .xml, options: 0)
                                             try data.write(to: fileURL)
-                                            mgr.refreshFiles.toggle()
+                                            mgr.refreshFiles = item.fileURL
                                         } catch {
                                             print("(fm) failed to create plist: \(error)")
                                             Alertinator.shared.alert(title: "Failed to create property list!", body: Errors.checkLogs)
@@ -194,7 +194,7 @@ struct FileBrowserView: View {
                                     if !name.isEmpty {
                                         do {
                                             try fm.createDirectoryIfNeeded(at: item.fileURL.appendingPathComponent(name))
-                                            mgr.refreshFiles.toggle()
+                                            mgr.refreshFiles = item.fileURL
                                         } catch {
                                             print("(fm) failed to create folder: \(error)")
                                             Alertinator.shared.alert(title: "Failed to create folder!", body: Errors.checkLogs)
@@ -211,7 +211,7 @@ struct FileBrowserView: View {
                                     if !symPath.isEmpty {
                                         do {
                                             try fm.createSymbolicLink(atPath: item.fileURL.appendingPathComponent(URL(fileURLWithPath: symPath).lastPathComponent).path, withDestinationPath: symPath)
-                                            mgr.refreshFiles.toggle()
+                                            mgr.refreshFiles = item.fileURL
                                         } catch {
                                             print("(fm) failed to create symlink: \(error)")
                                             Alertinator.shared.alert(title: "Failed to create symlink!", body: "\(error)")
@@ -302,7 +302,9 @@ struct FileBrowserView: View {
             handleImport(result)
         }
         .refreshable {
-            mgr.refreshFiles.toggle()
+            DispatchQueue.global(qos: .userInitiated).async {
+                loadDirFiles()
+            }
         }
         .onAppear {
             DispatchQueue.global(qos: .userInitiated).async {
@@ -322,9 +324,11 @@ struct FileBrowserView: View {
         .onChange(of: filesAscend) { _ in
             dirFiles = sortFiles(files: dirFiles)
         }
-        .onChange(of: mgr.refreshFiles) { _ in
-            DispatchQueue.global(qos: .userInitiated).async {
-                loadDirFiles()
+        .onChange(of: mgr.refreshFiles) { newValue in
+            if newValue == item.fileURL {
+                DispatchQueue.global(qos: .userInitiated).async {
+                    loadDirFiles()
+                }
             }
         }
     }
@@ -397,7 +401,7 @@ struct FileBrowserView: View {
                 try? fm.removeItem(at: newURL)
                 
                 try data.write(to: newURL)
-                mgr.refreshFiles.toggle()
+                mgr.refreshFiles = nil
             } catch {
                 print("(fm) failed to import file: \(error)")
                 Alertinator.shared.alert(title: "Failed to import file!", body: "\(error)")

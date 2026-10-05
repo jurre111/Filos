@@ -104,7 +104,7 @@ struct FileRow: View {
                 Button(role: .destructive) {
                     do {
                         try fm.removeItem(at: item.fileURL)
-                        mgr.refreshFiles.toggle()
+                        mgr.refreshFiles = parent.fileURL
                     } catch {
                         print("[!] failed to delete file: \(error)")
                         Alertinator.shared.alert(title: "Failed to delete file!", body: error.localizedDescription)
@@ -177,7 +177,7 @@ struct FileRow: View {
                         if let name = result {
                             let res = renameFile(item.fileURL, to: name)
                             if res {
-                                mgr.refreshFiles.toggle()
+                               mgr.refreshFiles = parent.fileURL
                             } else {
                                 Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)
                             }
@@ -194,7 +194,7 @@ struct FileRow: View {
                         if !fm.fileExists(atPath: item.fileURL.deletingPathExtension().path) {
                             let res = unzipFile(item.fileURL)
                             if res {
-                                mgr.refreshFiles.toggle()
+                                mgr.refreshFiles = parent.fileURL
                             }
                         } else {
                             Alertinator.shared.alert(title: "Failed to uncompress file!", body: "An item with the same name already exists here.")
@@ -207,7 +207,7 @@ struct FileRow: View {
                         if !fm.fileExists(atPath: item.fileURL.appendingPathExtension("zip").path) {
                             let res = zipFile(item.fileURL)
                             if res {
-                                mgr.refreshFiles.toggle()
+                                mgr.refreshFiles = parent.fileURL
                             }
                         } else {
                             Alertinator.shared.alert(title: "Failed to comrpess file!", body: "An archive with the same name already exists here.")
@@ -222,7 +222,7 @@ struct FileRow: View {
                 Button {
                     let res = duplicateFile(item.fileURL)
                     if res {
-                        mgr.refreshFiles.toggle()
+                        mgr.refreshFiles = parent.fileURL
                     } else {
                         Alertinator.shared.alert(title: "Failed to duplicate file!", body: Errors.checkLogs)
                     }
@@ -251,7 +251,7 @@ struct FileRow: View {
                                 try fm.copyItem(at: item.fileURL, to: targetURL)
                                 Alertinator.shared.alert(title: "Successfully moved file!", body: "Would you like to delete the original file?", actionLabel: "Yes", action: {
                                     try? fm.removeItem(at: item.fileURL)
-                                    mgr.refreshFiles.toggle()
+                                    mgr.refreshFiles = parent.fileURL
                                 })
                             } catch {
                                 print("[!] failed to copy file: \(error.localizedDescription)")
@@ -276,7 +276,7 @@ struct FileRow: View {
                 Button(role: .destructive) {
                     do {
                         try fm.removeItem(at: item.fileURL)
-                        mgr.refreshFiles.toggle()
+                        mgr.refreshFiles = parent.fileURL
                     } catch {
                         print("[!] failed to delete file: \(error)")
                         Alertinator.shared.alert(title: "Failed to delete file!", body: Errors.checkLogs)
@@ -297,7 +297,7 @@ struct FileRow: View {
                 if !fm.fileExists(atPath: item.fileURL.deletingPathExtension().path) {
                     let res = unzipFile(item.fileURL)
                     if res {
-                        mgr.refreshFiles.toggle()
+                        mgr.refreshFiles = parent.fileURL
                     }
                 } else {
                     Alertinator.shared.alert(title: "Failed to uncompress file!", body: "An item with the same name already exists here.")

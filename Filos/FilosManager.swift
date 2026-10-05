@@ -23,7 +23,7 @@ struct NavItem {
 final class FilosManager: ObservableObject {
     static let shared = FilosManager()
     
-    @Published var refreshFiles = false
+    @Published var refreshFiles: URL?
     @Published var logOutput = ""
     @Published var tokenVaild = false
     @Published var navArray: [NavItem] = []

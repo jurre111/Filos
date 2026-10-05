@@ -96,7 +96,7 @@ struct FolderRow: View {
                                     try fm.moveItem(at: url, to: newFolderURL.appendingPathComponent(url.lastPathComponent))
                                 }
                                 try fm.removeItem(at: item.fileURL)
-                                mgr.refreshFiles.toggle()
+                                mgr.refreshFiles = item.fileURL
                             } catch {
                                 print("[!] failed to rename folder: \(error)")
                                 Alertinator.shared.alert(title: "Failed to rename folder!", body: "\(error)")
@@ -111,7 +111,7 @@ struct FolderRow: View {
                     if !fm.fileExists(atPath: item.fileURL.appendingPathExtension("zip").path) {
                         let res = zipFile(item.fileURL)
                         if res {
-                            mgr.refreshFiles.toggle()
+                            mgr.refreshFiles = item.fileURL
                         }
                     } else {
                         Alertinator.shared.alert(title: "Failed to comrpess file!", body: "An archive with the same name already exists here.")
@@ -154,7 +154,7 @@ struct FolderRow: View {
                                 try fm.moveItem(at: url, to: newFolderURL.appendingPathComponent(url.lastPathComponent))
                             }
                             try fm.removeItem(at: item.fileURL)
-                            mgr.refreshFiles.toggle()
+                            mgr.refreshFiles = item.fileURL
                         } catch {
                             print("[!] failed to move folder: \(error)")
                             Alertinator.shared.alert(title: "Failed to move folder!", body: "\(error)")
@@ -176,7 +176,7 @@ struct FolderRow: View {
             if item.writable {
                 Button(role: .destructive) {
                     try? fm.removeItem(at: item.fileURL)
-                    mgr.refreshFiles.toggle()
+                    mgr.refreshFiles = item.fileURL
                 } label: {
                     Label("Delete", systemImage: "trash")
                 }

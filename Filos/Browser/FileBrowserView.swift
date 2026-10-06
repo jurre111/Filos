@@ -303,7 +303,7 @@ struct FileBrowserView: View {
         }
         .refreshable {
             DispatchQueue.global(qos: .userInitiated).async {
-                loadDirFiles()
+                loadDirFiles(false)
             }
         }
         .onAppear {
@@ -334,9 +334,9 @@ struct FileBrowserView: View {
     }
     
     // MARK: handle files
-    private func loadDirFiles() {
+    private func loadDirFiles(_ load: Bool = true) {
         do {
-            currentState = .loading
+            if load { currentState = .loading }
             let pathFiles = try fm.contentsOfDirectory(at: item.fileURL, includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey, .fileSizeKey, .contentModificationDateKey])
             
             let unsortedFiles = pathFiles.map { fileURL in

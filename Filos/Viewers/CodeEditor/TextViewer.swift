@@ -158,14 +158,15 @@ struct TextViewer: View {
                                         let res = renameFile(fileURL, to: name)
                                         if res {
                                             file.name = name
-                                            for (index, file) in dirFiles.enumerated() {
-                                                if file.fileURL == fileURL {
-                                                    dirFiles[index].name = name
-                                                    dirFiles[index].displayName = name
-                                                    dirFiles[index].fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
-                                                    break
-                                                }
-                                            }
+                                            // for (index, file) in dirFiles.enumerated() {
+                                            //     if file.fileURL == fileURL {
+                                            //         dirFiles[index].name = name
+                                            //         dirFiles[index].displayName = name
+                                            //         dirFiles[index].fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
+                                            //         break
+                                            //     }
+                                            // }
+                                            mgr.refreshFiles = fileURL.deletingLastPathComponent()
                                             fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
                                         } else {
                                             Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)

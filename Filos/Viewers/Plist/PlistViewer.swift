@@ -12,7 +12,7 @@ struct PlistViewer: View {
     @StateObject private var pmgr = PlistManager.shared
     @EnvironmentObject var mgr: FilosManager
     @Environment(\.dismiss) var dismiss
-    var fileURL: URL
+    @State private var fileURL: URL
     
     @State private var file = clearFileItem
     @State private var showErrorView = false

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PlistViewer: View {
     @StateObject private var pmgr = PlistManager.shared
+    @EnvironmentObject var mgr: FilosManager
     @Environment(\.dismiss) var dismiss
     var fileURL: URL
     
@@ -68,12 +69,6 @@ struct PlistViewer: View {
                             }
                         } label: {
                             Label("Share", systemImage: "square.and.arrow.up")
-                        }
-                        Button {
-                            Haptic.shared.play(.soft)
-                            UIPasteboard.general.string = fileText
-                        } label: {
-                            Label("Copy", systemImage: "doc.on.doc")
                         }
                         Button {
                             Alertinator.shared.prompt(title: "What would you like to call this file?", text: file.name, completion: { result in

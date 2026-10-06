@@ -55,21 +55,55 @@ struct PlistViewer: View {
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        if let url = makeTemp(file.fileURL) {
-                            presentShareSheet(with: url)
-                        }
-                    } label: {
-                        Label("Share", systemImage: "square.and.arrow.up")
-                            .labelStyle(.iconOnly)
-                    }
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
                         dismiss()
                     } label: {
                         ToolbarLabel("Close", symbol: "xmark")
                     }
+                }
+                ToolbarItem(placement: .principal) {
+                    Menu {
+                        Button {
+                            if let url = makeTemp(file.fileURL) {
+                                presentShareSheet(with: url)
+                            }
+                        } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                        Button {
+                            Haptic.shared.play(.soft)
+                            UIPasteboard.general.string = fileText
+                        } label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        }
+                        Button {
+                            Alertinator.shared.prompt(title: "What would you like to call this file?", text: file.name, completion: { result in
+                                if let name = result {
+                                    let res = renameFile(fileURL, to: name)
+                                    if res {
+                                        file.name = name
+                                        mgr.refreshFiles = fileURL.deletingLastPathComponent()
+                                        fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
+                                    } else {
+                                        Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)
+                                    }
+                                }
+                            })
+                        } label: {
+                            Label("Rename", systemImage: "applepencil")
+                                .foregroundStyle(file.writable ? .primary : .secondary)
+                        }
+                        .disabled(!file.writable)
+                    } label: {
+                        HStack(alignment: .center, spacing: 6) {
+                            Text(fileURL.deletingPathExtension().lastPathComponent)
+                                .font(.headline)
+                            Image(systemName: "chevron.down.circle.fill")
+                                .font(.footnote.bold())
+                                .foregroundStyle(.secondary)
+                                .symbolRenderingMode(.hierarchical)
+                        }
+                    }
+                    .tint(.primary)
                 }
             }
         }

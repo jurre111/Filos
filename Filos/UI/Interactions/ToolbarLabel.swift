@@ -22,6 +22,7 @@ struct ToolbarLabel: View {
                 .labelStyle(.iconOnly)
         } else {
             Text(label)
+                .bold()
         }
     }
 }

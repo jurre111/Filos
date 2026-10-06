@@ -284,7 +284,7 @@ struct FileBrowserView: View {
             switch newPrev.type {
             case .info: InfoViewer(newPrev.file)
             case .plist: PlistViewer(newPrev.file.fileURL)
-            case .text: TextViewer(newPrev.file.fileURL)
+            case .text: TextViewer(newPrev.file.fileURL, $dirFiles)
             default: EmptyView()
             }
         }

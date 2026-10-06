@@ -68,14 +68,16 @@ struct TextViewer: View {
     @Environment(\.dismiss) var dismiss
     
     @State var fileURL: URL
+    @Binding var dirFiles: [FileItem]
     
     @State var fileLanguage: String = ""
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
 
-    init(_ fileURL: URL) {
+    init(_ fileURL: URL, _ dirFiles: Binding<[FileItem]>) {
         self.fileURL = fileURL
+        self._dirFiles = dirFiles
         if let lang = extensions[fileURL.pathExtension.lowercased()] {
             _fileLanguage = State(initialValue: lang)
         }
@@ -107,7 +109,6 @@ struct TextViewer: View {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             editText = fileText
-                            mgr.refreshFiles = fileURL.deletingLastPathComponent()
                             dismiss()
                         } label: {
                             Text("Close")
@@ -157,6 +158,14 @@ struct TextViewer: View {
                                         let res = renameFile(fileURL, to: name)
                                         if res {
                                             file.name = name
+                                            for (index, file) in dirFiles.enumerated() {
+                                                if file.fileURL == fileURL {
+                                                    file.name = name
+                                                    file.displayName = name
+                                                    file.fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
+                                                    break
+                                                }
+                                            }
                                             fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
                                         } else {
                                             Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)

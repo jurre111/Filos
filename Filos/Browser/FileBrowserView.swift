@@ -284,7 +284,7 @@ struct FileBrowserView: View {
             switch newPrev.type {
             case .info: InfoViewer(newPrev.file)
             case .plist: PlistViewer(newPrev.file.fileURL)
-            case .text: TextViewer(newPrev.file.fileURL, $dirFiles)
+            case .text: TextViewer(newPrev.file.fileURL)
             default: EmptyView()
             }
         }
@@ -303,7 +303,7 @@ struct FileBrowserView: View {
         }
         .refreshable {
             DispatchQueue.global(qos: .userInitiated).async {
-                loadDirFiles(false)
+                loadDirFiles()
             }
         }
         .onAppear {
@@ -334,9 +334,9 @@ struct FileBrowserView: View {
     }
     
     // MARK: handle files
-    private func loadDirFiles(_ load: Bool = true) {
+    private func loadDirFiles() {
         do {
-            if load { currentState = .loading }
+            currentState = .loading
             let pathFiles = try fm.contentsOfDirectory(at: item.fileURL, includingPropertiesForKeys: [.isDirectoryKey, .isSymbolicLinkKey, .fileSizeKey, .contentModificationDateKey])
             
             let unsortedFiles = pathFiles.map { fileURL in

@@ -68,16 +68,14 @@ struct TextViewer: View {
     @Environment(\.dismiss) var dismiss
     
     @State var fileURL: URL
-    @Binding var dirFiles: [FileItem]
     
     @State var fileLanguage: String = ""
     @State private var file = clearFileItem
     @State private var fileText = ""
     @State private var editText = ""
 
-    init(_ fileURL: URL, _ dirFiles: Binding<[FileItem]>) {
+    init(_ fileURL: URL) {
         self.fileURL = fileURL
-        self._dirFiles = dirFiles
         if let lang = extensions[fileURL.pathExtension.lowercased()] {
             _fileLanguage = State(initialValue: lang)
         }
@@ -89,22 +87,22 @@ struct TextViewer: View {
             RunestoneEditor(text: $editText, language: $fileLanguage, editable: $file.writable)
                 .ignoresSafeArea(.container, edges: .bottom)
                 .navigationBarTitleDisplayMode(.inline)
-            // .safeAreaInset(edge: .bottom) {
-            //     if !file.writable {
-            //         HStack {
-            //             Spacer()
-            //             Button {
-            //                 Alertinator.shared.alert(title: "View-Only File", body: "You can only read this file.")
-            //             } label: {
-            //                 Image(systemName: "lock")
-            //                     .padding(10)
-            //             }
-            //             .foregroundStyle(.accent)
-            //             .padding(.trailing)
-            //             .ignoresSafeArea()
-            //         }
-            //     }
-            // }
+                .safeAreaInset(edge: .bottom) {
+                    if !file.writable {
+                        HStack {
+                            Spacer()
+                            Button {
+                                Alertinator.shared.alert(title: "View-Only File", body: "You can only read this file.")
+                            } label: {
+                                Image(systemName: "lock")
+                                    .padding(10)
+                            }
+                            .foregroundStyle(.accent)
+                            .padding(.trailing)
+                            .ignoresSafeArea()
+                        }
+                    }
+                }
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
@@ -158,14 +156,6 @@ struct TextViewer: View {
                                         let res = renameFile(fileURL, to: name)
                                         if res {
                                             file.name = name
-                                            // for (index, file) in dirFiles.enumerated() {
-                                            //     if file.fileURL == fileURL {
-                                            //         dirFiles[index].name = name
-                                            //         dirFiles[index].displayName = name
-                                            //         dirFiles[index].fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
-                                            //         break
-                                            //     }
-                                            // }
                                             mgr.refreshFiles = fileURL.deletingLastPathComponent()
                                             fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
                                         } else {

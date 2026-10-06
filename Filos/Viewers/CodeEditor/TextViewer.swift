@@ -160,9 +160,9 @@ struct TextViewer: View {
                                             file.name = name
                                             for (index, file) in dirFiles.enumerated() {
                                                 if file.fileURL == fileURL {
-                                                    file.name = name
-                                                    file.displayName = name
-                                                    file.fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
+                                                    dirFiles[index].name = name
+                                                    dirFiles[index].displayName = name
+                                                    dirFiles[index].fileURL = fileURL.deletingLastPathComponent().appendingPathComponent(name)
                                                     break
                                                 }
                                             }

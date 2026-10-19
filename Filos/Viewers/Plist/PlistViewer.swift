@@ -9,10 +9,10 @@ import SwiftUI
 
 
 struct PlistViewer: View {
-    @StateObject private var pmgr = PlistManager.shared
     @EnvironmentObject var mgr: FilosManager
     @Environment(\.dismiss) var dismiss
     @State private var fileURL: URL
+    @State private var dict: [String: Any] = [:]
     
     @State private var file = clearFileItem
     @State private var showErrorView = false
@@ -27,10 +27,7 @@ struct PlistViewer: View {
                 if showErrorView {
                     PlainAlert(title: "Failed to load plist!", symbol: "exclamationmark.triangle.fill", text: Errors.checkLogs, color: .yellow)
                 } else {
-                    ForEach($pmgr.plistArray) { $item in
-                        ItemRow(item: $item, hierarchy: 0)
-                            .environmentObject(pmgr)
-                    }
+                    PlistGroup(key: "Root", value: dict, path: [], dict: $dict, keyEditable: false)
                 }
             }
             .navigationTitle(file.fileURL.lastPathComponent)
@@ -38,7 +35,7 @@ struct PlistViewer: View {
             .listStyle(.inset)
             .noRefreshable()
             .safeAreaInset(edge: .bottom) {
-                if !pmgr.isWritable {
+                if file.isWritable {
                     HStack {
                         Spacer()
                         Button {
@@ -103,15 +100,176 @@ struct PlistViewer: View {
             }
         }
         .onAppear {
-            pmgr.url = fileURL
             file = getFileItem(at: fileURL)
-            let res = pmgr.loadPlistItems()
+            let res = loadPlistItems()
             if !res {
                 showErrorView = true
             }
-            pmgr.isWritable = file.writable
         }
         .navigationViewStyle(.stack)
+    }
+
+    func loadPlistItems() -> Bool {
+        if let rawDict = getFileDict(url) {
+            dict = rawDict
+            return true
+        } else {
+            print("[!] failed to load plist as it seems like there was no passable dictionary?")
+        }
+        return false
+    }
+}
+
+struct DictView: View {
+    @Binding var dict: [String: Any]
+    let path: [String]
+    @State private var keys: [String] = []
+
+    var body: some View {
+        ForEach(keys, id: \.self) { key in
+            let value = getDictValue(dict, path + [key]) ?? "huh?"
+            PlistGroup(key: key, value: value, path: path + [key], dict: $dict)
+        }
+        .onAppear {
+            if let value = getDictValue(dict, path) as? [String: Any] {
+                keys = value.keys.sorted()
+            }
+        }
+    }
+}
+
+func getType(_ value: Any) -> PlistItemType {
+    switch value {
+    case is String: return .string
+    case is Int: return .int
+    case is Double: return .double
+    case is Bool: return .bool
+    case is Data: return .data
+    case is [String : Any]: return .dict
+    case is [Any]: return .array
+    default: return .unknown
+    }
+}
+
+func getDictValue(dict: [String: Any], path: [Any]) -> Any? {
+    guard !path.isEmpty else { return dict }
+
+    var currentDict: [String: Any] = dict
+    for component in path.dropLast() {
+        if let nextDict = currentDict[component] as? [String: Any] {
+            currentDict = nextDict
+        } else {
+            return nil
+        }
+    }
+    return currentDict[path.last!]
+}
+
+func getStringValue(_ value: Any) -> String {
+    switch value {
+    case let v as String: return v
+    case let v as Int: return String(v)
+    case let v as Double: return String(v)
+    case let v as Bool: return String(v)
+    case let v as Data: return v.base64EncodedString()
+    case let v as [String: Any]: return v.description
+    case let v as [Any]: return v.description
+    default: return ""
+    }
+}
+
+struct PlistGroup: View {
+    let key: String
+    let value: Any
+    let type: PlistItemType
+    let path: [String]
+    let hierarchy: Int = 0
+    let stringVal: String
+    let keyEditable: Bool
+
+    @State private var isExpanded: Bool = false
+    @Binding var dict: [String: Any]
+
+    init(key: String, value: Any, path: [String], dict: Binding<[String: Any]>, keyEditable: Bool = true) {
+        self.key = key
+        self.value = value
+        self.type = getType(value)
+        self.path = path
+        self.hierarchy = path.count
+        self.stringVal = getStringValue(value)
+        self.keyEditable = keyEditable
+        self._dict = dict
+    }
+
+    var body: some View {
+        if type == .dict || type == .array || type == .data {
+            HStack {
+                Button {
+                    isExpanded.toggle()
+                } label: {
+                    HStack {
+                        Image(systemName: "chevron.down")
+                            .font(.body.weight(.semibold))
+                            .imageScale(.small)
+                            .rotationEffect(.degrees(isExpanded ? 0 : -90))
+                            .animation(.easeInOut(duration: 0.2), value: isExpanded)
+                        Text(key)
+                            .lineLimit(1)
+                    }
+                }
+                .buttonStyle(.plain)
+                Spacer()
+                if type != .data {
+                    Text("\(type.label) (\(value.count.description))")
+                } else {
+                    Text(type.label)
+                }
+                Image(systemName: "info.circle")
+                    .overlay {
+                        NavigationLink(destination: ModifyItemPage(dict: $dict, path: path, keyEditable: keyEditable)) {
+                            EmptyView()
+                        }
+                        .opacity(0)
+                    }
+            }
+            .listRowBackground(Color(uiColor: .hierarchyLevelColor(hierarchy)))
+            // dictionary inception time
+            if isExpanded {
+                if type == .dict {
+                    DictView(dict: $dict, path: path)
+                } else if type == .array {
+                    if let array = value as? [Any] {
+                        ForEach(array.indices, id: \.self) { index in
+                            let itemValue = array[index]
+                            PlistGroup(key: "Item \(index)", value: itemValue, path: path + ["Item \(index)"], dict: $dict, keyEditable: false)
+                        }
+                    }
+                } else if type == .data {
+                    Text(stringVal)
+                        .font(.system(size: 12, design: .monospaced))
+                        .lineLimit(12)
+                        .listRowBackground(Color(uiColor: .hierarchyLevelColor(hierarchy + 1)))
+                        .overlay {
+                            NavigationLink(destination: ModifyItemPage(dict: $dict, path: path, keyEditable: keyEditable)) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+                        }
+                }
+            }
+        } else {
+            NavigationLink(destination: ModifyItemPage(dict: $dict, path: path, keyEditable: keyEditable)) {
+                HStack {
+                    Text(key)
+                        .lineLimit(1)
+                    Spacer()
+                    Text(stringVal)
+                        .lineLimit(1)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .listRowBackground(Color(uiColor: .hierarchyLevelColor(hierarchy)))
+        }
     }
 }
 

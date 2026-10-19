@@ -21,6 +21,7 @@ import Combine
 final class PlistManager: ObservableObject {
     static let shared = PlistManager()
     
+    @Published var dict: [String: Any] = [:]
     @Published var plistArray: [PlistItem] = []
     @Published var url: URL = URL.documentsDirectory.appendingPathComponent("oops")
     @Published var isWritable = false
@@ -28,8 +29,9 @@ final class PlistManager: ObservableObject {
     init() {}
     
     func loadPlistItems() -> Bool {
-        plistArray = [PlistItem(key: "Root", value: [], isExpanded: true)]
+        plistArray = [PlistItem(key: "Root", value: [], isExpanded: true, path: [])]
         if let rawDict = getFileDict(url) {
+            dict = rawDict
             for key in rawDict.keys {
                 if let value = rawDict[key] {
                     plistArray[0].dictVal.append(PlistItem(key: key, value: value))
@@ -111,6 +113,8 @@ struct PlistItem: Identifiable {
     var type: PlistItemType = .unknown
     var index: Int?
     var isExpanded: Bool
+    var path: String
+    var keyEditable: Bool = true
     
     var stringVal: String = ""
     var boolVal: Bool = false

@@ -9,21 +9,14 @@ import SwiftUI
 
 
 struct ModifyItemPage: View {
-    @EnvironmentObject private var pmgr: PlistManager
+    @Binding private var dict: [String: Any]
+    let path: [String]
     @Environment(\.dismiss) var dismiss
-    
-    @State var ogItem: PlistItem = PlistItem(key: "", value: "")
-    @Binding var item: PlistItem
-    @State private var isEditing = false
     
     var body: some View {
         List {
             Section {
-                if isEditing {
-                    TextField("Key", text: $item.key)
-                } else {
-                    Text(item.key)
-                }
+                TextField("Key", text: $item.key)
                 Picker("Type", selection: $item.type) {
                     ForEach(PlistItemType.allCases, id: \.self) { type in
                         if type != .unknown {
